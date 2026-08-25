@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Clock3, Mail, ShieldCheck } from "lucide-react";
+import { Clock3, FlaskConical, Mail, ShieldCheck } from "lucide-react";
 
 import { BookingForm } from "@/components/booking-form";
+import { isShowcaseMode } from "@/components/showcase-banner";
 import { Card } from "@/components/ui/card";
 import { site } from "@/lib/site-content";
 
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default function BookPage() {
+  const showcase = isShowcaseMode();
+
   return (
     <>
       <section className="page-hero">
@@ -23,8 +26,9 @@ export default function BookPage() {
             Tell us about your pup.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-            Choose salon or mobile service, share a few details, and request a
-            time. We’ll reply to confirm availability and final pricing.
+            {showcase
+              ? "Try the booking form for this showcase rebuild. Submissions are validated for demo purposes and are not emailed live."
+              : "Choose salon or mobile service, share a few details, and request a time. We’ll reply to confirm availability and final pricing."}
           </p>
         </div>
       </section>
@@ -39,6 +43,18 @@ export default function BookPage() {
         </Suspense>
 
         <aside className="space-y-4 lg:sticky lg:top-28">
+          {showcase ? (
+            <Card className="border-0 bg-lime-soft p-6 ring-1 ring-lime-dark/15">
+              <FlaskConical className="size-7 text-lime-dark" />
+              <h2 className="mt-5 font-heading text-2xl font-semibold">
+                Showcase mode
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-ink/70">
+                This form is for testing the new site. Requests are not
+                delivered. Email {site.email} for a real appointment.
+              </p>
+            </Card>
+          ) : null}
           <Card className="border-0 bg-ink p-6 text-white shadow-xl ring-0">
             <ShieldCheck className="size-7 text-lime" />
             <h2 className="mt-5 font-heading text-2xl font-semibold">

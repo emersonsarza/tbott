@@ -41,24 +41,26 @@ test("booking form shows the success state", async ({ page }) => {
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        message: "Request received. We’ll reply soon to confirm availability.",
+        showcase: true,
+        message:
+          "Showcase mode: this request was validated but not emailed. Booking delivery is disabled for testing.",
       }),
     });
   });
   await page.goto("/book");
   await page.getByRole("button", { name: "Request appointment" }).click();
   await expect(
-    page.getByRole("heading", { name: "Request received" }),
+    page.getByRole("heading", { name: "Showcase request validated" }),
   ).toBeVisible();
 });
 
 test("booking form shows an API error", async ({ page }) => {
   await page.route("**/api/booking", async (route) => {
     await route.fulfill({
-      status: 503,
+      status: 500,
       contentType: "application/json",
       body: JSON.stringify({
-        message: "Appointment email is not configured yet.",
+        message: "We couldn’t send your request. Please try again.",
       }),
     });
   });
@@ -66,6 +68,6 @@ test("booking form shows an API error", async ({ page }) => {
   await page.getByRole("button", { name: "Request appointment" }).click();
   await expect(page.getByText("We couldn’t send this yet")).toBeVisible();
   await expect(
-    page.getByText("Appointment email is not configured yet."),
+    page.getByText("We couldn’t send your request. Please try again."),
   ).toBeVisible();
 });

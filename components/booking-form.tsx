@@ -100,6 +100,7 @@ export function BookingForm() {
       const result = (await response.json()) as {
         message?: string;
         email?: string;
+        showcase?: boolean;
         fieldErrors?: FieldErrors;
       };
 
@@ -116,7 +117,11 @@ export function BookingForm() {
         result.message ||
         "Request received. We’ll reply soon to confirm availability.";
       setSuccess(message);
-      toast.success("Appointment request sent");
+      toast.success(
+        result.showcase
+          ? "Showcase request validated"
+          : "Appointment request sent",
+      );
       form.reset();
       requestAnimationFrame(() => {
         document.getElementById("booking-status")?.focus();
@@ -137,13 +142,17 @@ export function BookingForm() {
           <CheckCircle2 className="size-8 text-ink" />
         </span>
         <h2 className="mt-6 font-heading text-3xl font-semibold">
-          Request received
+          {success.toLowerCase().includes("showcase")
+            ? "Showcase request validated"
+            : "Request received"}
         </h2>
         <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground">
           {success}
         </p>
         <p className="mt-4 text-sm font-semibold text-ink/65">
-          Remember: your appointment is not confirmed until our team replies.
+          {success.toLowerCase().includes("showcase")
+            ? `For a real appointment, email ${site.email}.`
+            : "Remember: your appointment is not confirmed until our team replies."}
         </p>
         <Button className="mt-7" onClick={() => setSuccess("")}>
           Send another request

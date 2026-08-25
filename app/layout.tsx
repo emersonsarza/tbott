@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 
+import { ShowcaseBanner } from "@/components/showcase-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
@@ -74,6 +75,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <ShowcaseBanner />
         <SiteHeader />
         <main id="main-content">{children}</main>
         <SiteFooter />

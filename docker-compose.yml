@@ -4,13 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    env_file:
-      - .env
+      - "3005:3000"
     environment:
-      RESEND_API_KEY: ${RESEND_API_KEY}
+      # Optional — omit for showcase mode (no outbound booking email)
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
       BOOKING_TO_EMAIL: ${BOOKING_TO_EMAIL:-tbottinc1@gmail.com}
-      BOOKING_FROM_EMAIL: ${BOOKING_FROM_EMAIL}
+      BOOKING_FROM_EMAIL: ${BOOKING_FROM_EMAIL:-}
       UPSTASH_REDIS_REST_URL: ${UPSTASH_REDIS_REST_URL:-}
       UPSTASH_REDIS_REST_TOKEN: ${UPSTASH_REDIS_REST_TOKEN:-}
     restart: unless-stopped

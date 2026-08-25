@@ -143,16 +143,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = process.env.RESEND_API_KEY?.trim();
+
+    // Showcase / testing: no Resend key means we only validate the form.
     if (!apiKey) {
-      return NextResponse.json(
-        {
-          message:
-            "Appointment email is not configured yet. Please email us directly.",
-          email: site.email,
-        },
-        { status: 503 },
-      );
+      console.info("[showcase] Booking request accepted without email delivery", {
+        location: parsed.data.location,
+        service: parsed.data.service,
+        petName: parsed.data.petName,
+      });
+      return NextResponse.json({
+        showcase: true,
+        message:
+          "Showcase mode: this request was validated but not emailed. Booking delivery is disabled for testing.",
+      });
     }
 
     const resend = new Resend(apiKey);
@@ -182,6 +186,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
+      showcase: false,
       message:
         "Request received. We’ll reply soon to confirm availability and pricing.",
     });
