@@ -17,7 +17,7 @@ yarn-error.log*
 *.md
 !README.md
 
-# env (compose mounts or copies on VPS)
+# env (compose / host injects at runtime; demo VPS is not production)
 .env
 .env.*
 !.env.example

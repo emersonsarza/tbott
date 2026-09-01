@@ -1,4 +1,5 @@
-name: Deploy TBott
+# Demo only: tbott.by1002.com (Emerson’s VPS). Not tbottinc.com production.
+name: Deploy TBott demo
 
 on:
   push:
@@ -9,7 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to VPS
+      - name: Deploy demo to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}

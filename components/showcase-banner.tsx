@@ -5,8 +5,8 @@ import { isShowcaseMode } from "@/lib/booking-delivery";
 import { site } from "@/lib/site-content";
 
 /**
- * Reads RESEND_API_KEY at request time so a Docker image built without the
- * key still hides this banner when compose injects one at runtime.
+ * Reads RESEND_API_KEY at request time (Vercel env, Docker compose, etc.)
+ * so a build without the key still hides this banner when a runtime key is set.
  */
 export async function ShowcaseBanner() {
   await connection();

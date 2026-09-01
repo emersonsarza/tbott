@@ -22,11 +22,10 @@ Booking requests are validated on the server. Outbound email is **optional**.
 
 - No `RESEND_API_KEY` → showcase mode: the banner and `/book` copy say so, and
   `POST /api/booking` returns `200` with `{ showcase: true }` (nothing is emailed).
-- With `RESEND_API_KEY` set at **container runtime** → live mode: the banner
-  hides and Resend is actually called. The Docker image is built without secrets;
-  `docker-compose.yml` injects env when the container starts. Restart/recreate
-  the container after changing env (`docker compose up -d` is enough; a rebuild
-  is only needed for code changes).
+- With `RESEND_API_KEY` set at **runtime** (Vercel project env, Docker compose,
+  etc.) → live mode: the banner hides and Resend is actually called. A rebuild
+  is not required just to add or change these vars; restart/redeploy so the
+  process picks them up.
 - `BOOKING_TO_EMAIL` defaults to the business Gmail.
 - `BOOKING_FROM_EMAIL` must be a verified Resend domain in live mode. If it is
   empty, the app falls back to `onboarding@resend.dev`, which can only send to
@@ -41,26 +40,44 @@ Failed Resend sends stay generic in the browser (`code: "delivery_failed"`).
 Server logs include Resend’s error name, status, message, and the from/to
 addresses (never the API key).
 
-## Go live (tbottinc.com)
+## Demo vs production
+
+These are **different hosts**. Do not point `tbottinc.com` at the demo VPS.
+
+| | Demo | Production |
+| --- | --- | --- |
+| URL | [https://tbott.by1002.com/](https://tbott.by1002.com/) | [https://tbottinc.com](https://tbottinc.com) |
+| Host | Emerson’s Hostinger VPS (Docker + OpenResty, `3005:3000`, `/srv/apps/tbott`) | A host the **client** owns — not this VPS |
+| Today | This Next.js app (showcase unless demo env has a Resend key) | DreamHost WordPress |
 
 `robots.ts`, `sitemap.ts`, and `metadataBase` already name
-[https://tbottinc.com](https://tbottinc.com). This app is already deployed on
-the OpenResty/Docker VPS at `https://tbott.by1002.com/` (`compose` maps
-`3005:3000`, `deploy.sh` at `/srv/apps/tbott`). **tbottinc.com still points at
-DreamHost WordPress** — do not cut DNS until booking email works on the VPS.
+[https://tbottinc.com](https://tbottinc.com). DreamHost can stay the **registrar**;
+only the DNS records for the site need to move when production is ready.
 
-1. **Resend domain.** In Resend, add and verify `tbottinc.com` (SPF/DKIM/DMARC
-   as Resend shows). Set `BOOKING_FROM_EMAIL` to
+### Go live (production — client host)
+
+1. **Resend (any production host).** In Resend, add and verify `tbottinc.com`
+   (SPF/DKIM/DMARC as Resend shows). Set `BOOKING_FROM_EMAIL` to
    `The Bark of the Town <appointments@tbottinc.com>` (already in `.env.example`).
-   The Resend test domain cannot deliver production requests to Gmail.
-2. **VPS env.** On the host, set `RESEND_API_KEY`, `BOOKING_TO_EMAIL`,
-   `BOOKING_FROM_EMAIL`, and optionally `UPSTASH_REDIS_REST_URL` /
-   `UPSTASH_REDIS_REST_TOKEN` for the `tbott` compose project (typically a
-   `/srv/apps/tbott/.env` that compose reads). Recreate the container so runtime
-   env is picked up. Confirm the home page no longer shows the showcase banner
-   and a test `POST /api/booking` emails the shop.
-3. **DNS cutover.** Point `tbottinc.com` (and `www`) from DreamHost to this
-   same OpenResty/Docker host. Leave WordPress migration out of this repo.
+   The Resend test domain cannot deliver production requests to Gmail. This step
+   is independent of Docker or the demo VPS.
+2. **App host.** Deploy this Next.js App Router app (`output: "standalone"`) to
+   **Vercel** (or another Node host the client controls). Set runtime env:
+   `RESEND_API_KEY`, `BOOKING_TO_EMAIL`, `BOOKING_FROM_EMAIL`, and optionally
+   `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`. Confirm the showcase
+   banner is gone and a test appointment email arrives.
+3. **DNS.** In DreamHost DNS, point `tbottinc.com` (and `www`) at that Vercel
+   (or equivalent) project. Leave WordPress running on DreamHost until cutover.
+   Do **not** point the domain at the demo VPS.
+
+Push-to-`main` GitHub Action SSH + `deploy.sh` update **demo only**.
+
+### Demo host (optional)
+
+To try live email on [tbott.by1002.com](https://tbott.by1002.com/) without
+publishing the real domain: set the same env vars in the demo compose `.env`,
+then `docker compose up -d` (rebuild only for code changes). That still is not
+production.
 
 ## Commands
 
