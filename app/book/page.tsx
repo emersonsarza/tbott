@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { Clock3, FlaskConical, Mail, ShieldCheck } from "lucide-react";
 
 import { BookingForm } from "@/components/booking-form";
-import { isShowcaseMode } from "@/components/showcase-banner";
 import { Card } from "@/components/ui/card";
+import { isShowcaseMode } from "@/lib/booking-delivery";
 import { site } from "@/lib/site-content";
 
 export const metadata: Metadata = {
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/book" },
 };
 
-export default function BookPage() {
+export default async function BookPage() {
+  await connection();
   const showcase = isShowcaseMode();
 
   return (

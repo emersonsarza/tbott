@@ -4,11 +4,17 @@ import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
 
 import {
+  getBookingFromEmail,
+  getBookingToEmail,
+  getResendApiKey,
+  logBookingDeliveryFailure,
+  publicDeliveryFailedBody,
+} from "@/lib/booking-delivery";
+import {
   bookingSchema,
   validatePhoto,
   type BookingInput,
 } from "@/lib/booking-schema";
-import { site } from "@/lib/site-content";
 
 export const runtime = "nodejs";
 
@@ -143,7 +149,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiKey = process.env.RESEND_API_KEY?.trim();
+    const apiKey = getResendApiKey();
 
     // Showcase / testing: no Resend key means we only validate the form.
     if (!apiKey) {
@@ -159,7 +165,8 @@ export async function POST(request: Request) {
       });
     }
 
-    const resend = new Resend(apiKey);
+    const from = getBookingFromEmail();
+    const to = getBookingToEmail();
     const attachments =
       photo && photo.size > 0
         ? [
@@ -170,19 +177,24 @@ export async function POST(request: Request) {
           ]
         : undefined;
 
-    const result = await resend.emails.send({
-      from:
-        process.env.BOOKING_FROM_EMAIL ||
-        "The Bark of the Town <onboarding@resend.dev>",
-      to: process.env.BOOKING_TO_EMAIL || site.email,
-      replyTo: parsed.data.email,
-      subject: `New ${parsed.data.location} request — ${parsed.data.petName}`,
-      html: bookingEmail(parsed.data),
-      attachments,
-    });
+    try {
+      const resend = new Resend(apiKey);
+      const result = await resend.emails.send({
+        from,
+        to,
+        replyTo: parsed.data.email,
+        subject: `New ${parsed.data.location} request — ${parsed.data.petName}`,
+        html: bookingEmail(parsed.data),
+        attachments,
+      });
 
-    if (result.error) {
-      throw new Error(result.error.message);
+      if (result.error) {
+        logBookingDeliveryFailure({ error: result.error, from, to });
+        return NextResponse.json(publicDeliveryFailedBody(), { status: 500 });
+      }
+    } catch (error) {
+      logBookingDeliveryFailure({ error, from, to });
+      return NextResponse.json(publicDeliveryFailedBody(), { status: 500 });
     }
 
     return NextResponse.json({
@@ -191,14 +203,7 @@ export async function POST(request: Request) {
         "Request received. We’ll reply soon to confirm availability and pricing.",
     });
   } catch (error) {
-    console.error("Booking request failed", error);
-    return NextResponse.json(
-      {
-        message:
-          "We couldn’t send your request. Please try again or email us directly.",
-        email: site.email,
-      },
-      { status: 500 },
-    );
+    console.error("[booking] Request failed", error);
+    return NextResponse.json(publicDeliveryFailedBody(), { status: 500 });
   }
 }

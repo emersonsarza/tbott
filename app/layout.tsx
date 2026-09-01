@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Fraunces, Manrope } from "next/font/google";
 
 import { ShowcaseBanner } from "@/components/showcase-banner";
@@ -75,7 +76,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <ShowcaseBanner />
+        <Suspense fallback={null}>
+          <ShowcaseBanner />
+        </Suspense>
         <SiteHeader />
         <main id="main-content">{children}</main>
         <SiteFooter />
