@@ -1,13 +1,15 @@
+import { connection } from "next/server";
 import { FlaskConical } from "lucide-react";
 
+import { isShowcaseMode } from "@/lib/booking-delivery";
 import { site } from "@/lib/site-content";
 
-/** True when outbound booking email is not configured. */
-export function isShowcaseMode() {
-  return !process.env.RESEND_API_KEY?.trim();
-}
-
-export function ShowcaseBanner() {
+/**
+ * Reads RESEND_API_KEY at request time (Vercel env, Docker compose, etc.)
+ * so a build without the key still hides this banner when a runtime key is set.
+ */
+export async function ShowcaseBanner() {
+  await connection();
   if (!isShowcaseMode()) return null;
 
   return (

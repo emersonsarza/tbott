@@ -3,13 +3,19 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
 
-import { bookingEmail, formatGender, formatService } from "@/lib/booking-email";
 import {
   formatAvailability,
   parseAvailabilityWindowsJson,
 } from "@/lib/availability";
+import {
+  getBookingFromEmail,
+  getBookingToEmail,
+  getResendApiKey,
+  logBookingDeliveryFailure,
+  publicDeliveryFailedBody,
+} from "@/lib/booking-delivery";
+import { bookingEmail, formatGender, formatService } from "@/lib/booking-email";
 import { bookingSchema, validatePhoto } from "@/lib/booking-schema";
-import { site } from "@/lib/site-content";
 
 export const runtime = "nodejs";
 
@@ -50,7 +56,6 @@ async function isRateLimited(identifier: string) {
   current.count += 1;
   return current.count > 5;
 }
-
 
 export async function POST(request: Request) {
   try {
@@ -105,7 +110,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiKey = process.env.RESEND_API_KEY?.trim();
+    const apiKey = getResendApiKey();
 
     // Showcase / testing: no Resend key means we only validate the form.
     if (!apiKey) {
@@ -121,7 +126,8 @@ export async function POST(request: Request) {
       });
     }
 
-    const resend = new Resend(apiKey);
+    const from = getBookingFromEmail();
+    const to = getBookingToEmail();
     const attachments =
       photo && photo.size > 0
         ? [
@@ -171,35 +177,28 @@ export async function POST(request: Request) {
         : []),
     ].join("\n");
 
-    const result = await resend.emails.send({
-      from:
-        process.env.BOOKING_FROM_EMAIL ||
-        "The Bark of the Town <appointments@tbottinc.com>",
-      to: process.env.BOOKING_TO_EMAIL || site.email,
-      replyTo: parsed.data.email,
-      ...(process.env.BOOKING_CC_EMAIL?.trim()
-        ? { cc: process.env.BOOKING_CC_EMAIL.trim() }
-        : {}),
-      subject,
-      html,
-      text,
-      attachments,
-    });
-
-    if (result.error) {
-      console.error("Resend send failed", {
-        error: result.error,
+    try {
+      const resend = new Resend(apiKey);
+      const result = await resend.emails.send({
+        from,
+        to,
+        replyTo: parsed.data.email,
+        ...(process.env.BOOKING_CC_EMAIL?.trim()
+          ? { cc: process.env.BOOKING_CC_EMAIL.trim() }
+          : {}),
         subject,
-        to: process.env.BOOKING_TO_EMAIL || site.email,
+        html,
+        text,
+        attachments,
       });
-      return NextResponse.json(
-        {
-          code: "delivery_failed",
-          message:
-            "We couldn’t send your request yet. Please email us directly to book.",
-        },
-        { status: 500 },
-      );
+
+      if (result.error) {
+        logBookingDeliveryFailure({ error: result.error, from, to });
+        return NextResponse.json(publicDeliveryFailedBody(), { status: 500 });
+      }
+    } catch (error) {
+      logBookingDeliveryFailure({ error, from, to });
+      return NextResponse.json(publicDeliveryFailedBody(), { status: 500 });
     }
 
     return NextResponse.json({
@@ -208,15 +207,7 @@ export async function POST(request: Request) {
         "Request received. We’ll reply soon to confirm availability and pricing.",
     });
   } catch (error) {
-    console.error("Booking request failed", error);
-    return NextResponse.json(
-      {
-        code: "delivery_failed",
-        message:
-          "We couldn’t send your request. Please try again or email us directly.",
-        email: site.email,
-      },
-      { status: 500 },
-    );
+    console.error("[booking] Request failed", error);
+    return NextResponse.json(publicDeliveryFailedBody(), { status: 500 });
   }
 }
