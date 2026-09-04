@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # Showcase host — set NEXT_PUBLIC_SITE_URL=https://tbottinc.com for production.
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://tbott.by1002.com}
     ports:
       - "3005:3000"
     environment:
@@ -10,6 +13,8 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       BOOKING_TO_EMAIL: ${BOOKING_TO_EMAIL:-tbottinc1@gmail.com}
       BOOKING_FROM_EMAIL: ${BOOKING_FROM_EMAIL:-}
+      BOOKING_CC_EMAIL: ${BOOKING_CC_EMAIL:-}
       UPSTASH_REDIS_REST_URL: ${UPSTASH_REDIS_REST_URL:-}
       UPSTASH_REDIS_REST_TOKEN: ${UPSTASH_REDIS_REST_TOKEN:-}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://tbott.by1002.com}
     restart: unless-stopped

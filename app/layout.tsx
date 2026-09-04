@@ -19,8 +19,20 @@ const fraunces = Fraunces({
   subsets: ["latin"],
 });
 
+/** Canonical production host; override with NEXT_PUBLIC_SITE_URL on showcase (by1002). */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+  "https://tbottinc.com";
+
+const ogImage = {
+  url: "/images/og.png",
+  width: 1200,
+  height: 630,
+  alt: "The Bark of the Town — Chicago dog grooming",
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tbottinc.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "The Bark of the Town | Chicago Dog Grooming",
     template: "%s | The Bark of the Town",
@@ -38,17 +50,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The Bark of the Town | Chicago Dog Grooming",
     description: site.description,
-    url: "https://tbottinc.com",
+    url: siteUrl,
     siteName: site.name,
     locale: "en_US",
     type: "website",
-    images: [{ url: "/images/logo.png", width: 500, height: 500, alt: site.name }],
+    images: [ogImage],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "The Bark of the Town | Chicago Dog Grooming",
     description: site.description,
-    images: ["/images/logo.png"],
+    images: [ogImage.url],
   },
 };
 
@@ -56,8 +68,8 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "PetGrooming",
   name: site.legalName,
-  url: "https://tbottinc.com",
-  image: "https://tbottinc.com/images/logo.png",
+  url: siteUrl,
+  image: `${siteUrl}/images/og.png`,
   email: site.email,
   address: {
     "@type": "PostalAddress",
