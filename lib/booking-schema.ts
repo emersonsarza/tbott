@@ -60,8 +60,11 @@ export type BookingInput = z.infer<typeof bookingSchema>;
 export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 export const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
-export function validatePhoto(photo: File | null) {
-  if (!photo || photo.size === 0) return null;
+export function validatePhoto(photo: File | null, options?: { required?: boolean }) {
+  const required = options?.required ?? true;
+  if (!photo || photo.size === 0) {
+    return required ? "A recent photo of your dog is required" : null;
+  }
   if (photo.size > MAX_PHOTO_BYTES) {
     return "Photo must be 5 MB or smaller";
   }

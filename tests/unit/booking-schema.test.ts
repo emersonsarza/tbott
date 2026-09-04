@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { bookingSchema } from "@/lib/booking-schema";
+import {
+  MAX_PHOTO_BYTES,
+  bookingSchema,
+  validatePhoto,
+} from "@/lib/booking-schema";
 
 const validBooking = {
   location: "salon",
@@ -64,5 +68,32 @@ describe("bookingSchema", () => {
       website: "https://spam.example",
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe("validatePhoto", () => {
+  it("requires a photo by default", () => {
+    expect(validatePhoto(null)).toBe("A recent photo of your dog is required");
+  });
+
+  it("rejects oversized photos", () => {
+    const file = new File([new Uint8Array(MAX_PHOTO_BYTES + 1)], "dog.jpg", {
+      type: "image/jpeg",
+    });
+    expect(validatePhoto(file)).toBe("Photo must be 5 MB or smaller");
+  });
+
+  it("rejects unsupported types", () => {
+    const file = new File([new Uint8Array(10)], "dog.gif", {
+      type: "image/gif",
+    });
+    expect(validatePhoto(file)).toBe("Photo must be a JPG, PNG, or WebP image");
+  });
+
+  it("accepts a valid jpeg", () => {
+    const file = new File([new Uint8Array(10)], "dog.jpg", {
+      type: "image/jpeg",
+    });
+    expect(validatePhoto(file)).toBeNull();
   });
 });

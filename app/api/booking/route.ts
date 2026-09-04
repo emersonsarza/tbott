@@ -97,7 +97,7 @@ export async function POST(request: Request) {
 
     const photoValue = formData.get("photo");
     const photo = photoValue instanceof File ? photoValue : null;
-    const photoError = validatePhoto(photo);
+    const photoError = validatePhoto(photo, { required: true });
     if (photoError) {
       return NextResponse.json(
         { message: photoError, fieldErrors: { photo: [photoError] } },

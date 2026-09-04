@@ -43,12 +43,14 @@ function Field({
   id,
   label,
   required,
+  description,
   error,
   children,
 }: {
   id: string;
   label: string;
   required?: boolean;
+  description?: string;
   error?: string[];
   children: React.ReactNode;
 }) {
@@ -58,6 +60,9 @@ function Field({
         {label}
         {required ? <span className="ml-1 text-red">*</span> : null}
       </Label>
+      {description ? (
+        <p className="text-sm leading-6 text-muted-foreground">{description}</p>
+      ) : null}
       {children}
       {error?.[0] ? (
         <p className="text-sm font-medium text-destructive">{error[0]}</p>
@@ -108,6 +113,17 @@ export function BookingForm() {
     setErrors({});
 
     const form = event.currentTarget;
+    const photo = photoInputRef.current?.files?.[0] ?? null;
+    if (!photo || photo.size === 0) {
+      setErrors({ photo: ["A recent photo of your dog is required"] });
+      setFormError("Please check the highlighted fields.");
+      setSubmitting(false);
+      requestAnimationFrame(() => {
+        document.getElementById("photo")?.focus();
+      });
+      return;
+    }
+
     const data = new FormData(form);
     data.set("location", location);
     data.set("service", service);
@@ -474,13 +490,20 @@ export function BookingForm() {
               className="min-h-28 bg-white text-base"
             />
           </Field>
-          <Field id="photo" label="Recent photo (optional)" error={errors.photo}>
+          <Field
+            id="photo"
+            label="Recent photo of your dog"
+            required
+            description="We use this to judge coat condition and size."
+            error={errors.photo}
+          >
             <input
               id="photo"
               ref={photoInputRef}
               name="photo"
               type="file"
               accept="image/jpeg,image/png,image/webp"
+              required
               className="sr-only"
               onChange={(event) => {
                 const file = event.target.files?.[0];

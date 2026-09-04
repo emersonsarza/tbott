@@ -27,7 +27,7 @@ Booking requests are validated on the server and delivered through Resend.
 - Upstash variables enable distributed production rate limiting. Without them,
   a process-local fallback protects local and single-instance environments.
 
-The form accepts optional JPG, PNG, or WebP pet photos up to 5 MB. A hidden
+The form requires a JPG, PNG, or WebP pet photo up to 5 MB. A hidden
 honeypot, strict validation, file constraints, and request limits reduce abuse.
 
 ## Commands
