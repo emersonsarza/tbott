@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   AlertCircle,
@@ -13,6 +13,7 @@ import {
   Sparkles,
   Store,
   Upload,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,13 +23,21 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { AvailabilityWindows } from "@/components/availability-windows";
+import { type AvailabilityWindow } from "@/lib/availability";
 import { site } from "@/lib/site-content";
+import { cn } from "@/lib/utils";
 
 type FieldErrors = Record<string, string[] | undefined>;
 
 const inputClass =
   "h-11 w-full bg-white text-base placeholder:text-muted-foreground/65";
+
+const EMPTY_WINDOWS: AvailabilityWindow[] = [
+  { date: "", start: "", end: "" },
+  { date: "", start: "", end: "" },
+  { date: "", start: "", end: "" },
+];
 
 function Field({
   id,
@@ -73,12 +82,23 @@ export function BookingForm() {
   const [success, setSuccess] = useState("");
   const [formError, setFormError] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [windows, setWindows] = useState<AvailabilityWindow[]>(EMPTY_WINDOWS);
+  const [photoName, setPhotoName] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
-  const minimumDate = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() + 2);
-    return date.toISOString().split("T")[0];
-  }, []);
+  useEffect(() => {
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+  }, [photoPreview]);
+
+  function clearPhoto() {
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoName("");
+    setPhotoPreview("");
+    if (photoInputRef.current) photoInputRef.current.value = "";
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -91,6 +111,7 @@ export function BookingForm() {
     const data = new FormData(form);
     data.set("location", location);
     data.set("service", service);
+    data.set("availabilityWindows", JSON.stringify(windows));
 
     try {
       const response = await fetch("/api/booking", {
@@ -123,6 +144,8 @@ export function BookingForm() {
           : "Appointment request sent",
       );
       form.reset();
+      clearPhoto();
+      setWindows(EMPTY_WINDOWS);
       requestAnimationFrame(() => {
         document.getElementById("booking-status")?.focus();
       });
@@ -221,7 +244,7 @@ export function BookingForm() {
           <div className="mt-5">
             <Field
               id="address"
-              label="Mobile service address"
+              label="Street address"
               required
               error={errors.address}
             >
@@ -304,7 +327,7 @@ export function BookingForm() {
           <div>
             <p className="eyebrow">Step 3</p>
             <h2 className="mt-1 font-heading text-2xl font-semibold">
-              Your details & preferred time
+              Your details & availability
             </h2>
           </div>
         </div>
@@ -452,78 +475,82 @@ export function BookingForm() {
             />
           </Field>
           <Field id="photo" label="Recent photo (optional)" error={errors.photo}>
-            <label
-              htmlFor="photo"
-              className="flex min-h-24 cursor-pointer items-center justify-center gap-3 rounded-2xl border border-dashed border-input bg-warm px-5 text-sm font-semibold text-ink/70 transition hover:border-lime-dark hover:bg-lime-soft"
-            >
-              <Upload className="size-5 text-red" />
-              Choose JPG, PNG, or WebP · up to 5 MB
-            </label>
             <input
               id="photo"
+              ref={photoInputRef}
               name="photo"
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              className="hidden"
+              className="sr-only"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (photoPreview) URL.revokeObjectURL(photoPreview);
+                if (!file) {
+                  setPhotoName("");
+                  setPhotoPreview("");
+                  return;
+                }
+                setPhotoName(file.name);
+                setPhotoPreview(URL.createObjectURL(file));
+              }}
             />
+            {photoPreview ? (
+              <div className="flex items-center gap-4 rounded-2xl border border-black/8 bg-warm p-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={photoPreview}
+                  alt=""
+                  className="size-16 shrink-0 rounded-xl object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-ink">
+                    {photoName}
+                  </p>
+                  <label
+                    htmlFor="photo"
+                    className="mt-1 inline-block cursor-pointer text-sm font-semibold text-red underline"
+                  >
+                    Replace photo
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearPhoto}
+                  className="grid size-9 shrink-0 place-items-center rounded-full text-ink/55 transition hover:bg-white hover:text-ink"
+                  aria-label="Remove photo"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+            ) : (
+              <label
+                htmlFor="photo"
+                className="flex min-h-24 cursor-pointer items-center justify-center gap-3 rounded-2xl border border-dashed border-input bg-warm px-5 text-sm font-semibold text-ink/70 transition hover:border-lime-dark hover:bg-lime-soft"
+              >
+                <Upload className="size-5 text-red" />
+                Choose JPG, PNG, or WebP · up to 5 MB
+              </label>
+            )}
           </Field>
         </div>
 
-        <div className="mt-7 grid gap-5 rounded-2xl bg-warm p-5 sm:grid-cols-2">
-          <Field
-            id="preferredDate"
-            label="Preferred date"
-            required
-            error={errors.preferredDate}
-          >
-            <Input
-              id="preferredDate"
-              name="preferredDate"
-              type="date"
-              min={minimumDate}
-              required
-              aria-invalid={Boolean(errors.preferredDate)}
-              className={inputClass}
+        <div className="mt-7 rounded-2xl bg-warm p-5">
+          <div className="space-y-2">
+            <p className="font-bold text-ink">
+              3 appointment options
+              <span className="ml-1 text-red">*</span>
+            </p>
+            <p className="text-sm leading-6 text-muted-foreground">
+              Pick a date and a time window for each option. Same-day and
+              next-day appointments aren’t available. Times are{" "}
+              {site.hours.label}.
+            </p>
+            <AvailabilityWindows
+              windows={windows}
+              onChange={setWindows}
+              error={errors.availability}
             />
-          </Field>
-          <Field
-            id="preferredTime"
-            label="Preferred time"
-            required
-            error={errors.preferredTime}
-          >
-            <Input
-              id="preferredTime"
-              name="preferredTime"
-              type="time"
-              min="09:00"
-              max="18:00"
-              step="900"
-              required
-              aria-invalid={Boolean(errors.preferredTime)}
-              className={inputClass}
-            />
-          </Field>
-          <Field id="alternateDate" label="Alternate date" error={errors.alternateDate}>
-            <Input
-              id="alternateDate"
-              name="alternateDate"
-              type="date"
-              min={minimumDate}
-              className={inputClass}
-            />
-          </Field>
-          <Field id="alternateTime" label="Alternate time" error={errors.alternateTime}>
-            <Input
-              id="alternateTime"
-              name="alternateTime"
-              type="time"
-              min="09:00"
-              max="18:00"
-              step="900"
-              className={inputClass}
-            />
-          </Field>
+          </div>
         </div>
       </Card>
 

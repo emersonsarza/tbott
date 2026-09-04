@@ -20,7 +20,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Mobile Dog Grooming",
+  title: "Mobile Grooming at Your Door",
   description:
     "Private, one-on-one mobile dog grooming at your Chicago home or workplace. Baths start at $130 and full grooms at $145.",
   alternates: { canonical: "/mobile-services" },

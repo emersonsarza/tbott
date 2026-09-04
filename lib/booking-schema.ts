@@ -29,10 +29,11 @@ export const bookingSchema = z.object({
   medical: requiredText("Medical conditions", 1000),
   aggression: z.enum(["yes", "no"]),
   notes: z.string().trim().max(2000, "Notes are too long").optional().default(""),
-  preferredDate: requiredText("Preferred date", 20),
-  preferredTime: requiredText("Preferred time", 20),
-  alternateDate: z.string().trim().max(20).optional().default(""),
-  alternateTime: z.string().trim().max(20).optional().default(""),
+  availability: z
+    .string()
+    .trim()
+    .min(10, "Please give us 3 detailed appointment options on your availability")
+    .max(2000, "Availability is too long"),
   consent: z.literal("on", {
     message: "Confirm that this is an appointment request",
   }),

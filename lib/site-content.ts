@@ -17,6 +17,12 @@ export const site = {
   },
   bookingNote:
     "Appointment requests are reviewed by our team. Your appointment is not confirmed until we reply.",
+  /** Salon booking windows — Chicago local time. */
+  hours: {
+    open: "09:00",
+    close: "18:00",
+    label: "9:00 AM – 6:00 PM",
+  },
 } as const;
 
 export const navigation = [

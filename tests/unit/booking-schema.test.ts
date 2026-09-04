@@ -17,10 +17,8 @@ const validBooking = {
   medical: "None",
   aggression: "no",
   notes: "",
-  preferredDate: "2026-09-01",
-  preferredTime: "10:00",
-  alternateDate: "",
-  alternateTime: "",
+  availability:
+    "Mon (9/8) 10:00-12:00\nTue (9/9) 1:00-3:30\nWed (9/10) 4:00-6:00",
   consent: "on",
   website: "",
 } as const;

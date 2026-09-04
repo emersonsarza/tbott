@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { salonPricing, services } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Salon Services & Pricing",
+  title: "Uptown Salon Grooming",
   description:
     "Nail trims, baths, and full dog grooms at our Uptown Chicago salon. View transparent starting prices and request an appointment.",
   alternates: { canonical: "/services" },

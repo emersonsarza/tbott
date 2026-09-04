@@ -26,21 +26,28 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.name,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   alternates: { canonical: "/" },
   openGraph: {
-    title: "The Bark of the Town",
+    title: "The Bark of the Town | Chicago Dog Grooming",
     description: site.description,
     url: "https://tbottinc.com",
     siteName: site.name,
     locale: "en_US",
     type: "website",
-    images: [{ url: "/images/gallery/1.jpg", width: 800, height: 400 }],
+    images: [{ url: "/images/logo.png", width: 500, height: 500, alt: site.name }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: site.name,
+    card: "summary",
+    title: "The Bark of the Town | Chicago Dog Grooming",
     description: site.description,
-    images: ["/images/gallery/1.jpg"],
+    images: ["/images/logo.png"],
   },
 };
 

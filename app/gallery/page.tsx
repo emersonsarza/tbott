@@ -4,7 +4,7 @@ import { BookingCta, SectionHeading } from "@/components/marketing";
 import { GalleryGrid } from "@/components/gallery-grid";
 
 export const metadata: Metadata = {
-  title: "Dog Grooming Gallery",
+  title: "Before & After Gallery",
   description:
     "See real before-and-after dog grooming transformations from The Bark of the Town in Chicago.",
   alternates: { canonical: "/gallery" },

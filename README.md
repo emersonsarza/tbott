@@ -23,6 +23,7 @@ Booking requests are validated on the server and delivered through Resend.
 - `RESEND_API_KEY` is required.
 - `BOOKING_TO_EMAIL` defaults to the business email.
 - `BOOKING_FROM_EMAIL` should use a verified production domain.
+- `BOOKING_CC_EMAIL` (optional) can CC an admin inbox on every request.
 - Upstash variables enable distributed production rate limiting. Without them,
   a process-local fallback protects local and single-instance environments.
 

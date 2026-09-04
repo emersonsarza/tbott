@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { policies, site } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Us",
   description:
     "Contact The Bark of the Town dog grooming salon at 1041 W Lawrence Avenue in Chicago, or request salon and mobile grooming online.",
   alternates: { canonical: "/contact" },

@@ -3,16 +3,18 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
 
+import { bookingEmail, formatGender, formatService } from "@/lib/booking-email";
 import {
-  bookingSchema,
-  validatePhoto,
-  type BookingInput,
-} from "@/lib/booking-schema";
+  formatAvailability,
+  parseAvailabilityWindowsJson,
+} from "@/lib/availability";
+import { bookingSchema, validatePhoto } from "@/lib/booking-schema";
 import { site } from "@/lib/site-content";
 
 export const runtime = "nodejs";
 
 const fallbackAttempts = new Map<string, { count: number; resetAt: number }>();
+const PHOTO_CONTENT_ID = "tbott-booking-photo";
 
 function getClientIp(request: Request) {
   return (
@@ -49,61 +51,6 @@ async function isRateLimited(identifier: string) {
   return current.count > 5;
 }
 
-function sanitize(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-}
-
-function bookingEmail(data: BookingInput) {
-  const rows = [
-    ["Location", data.location],
-    ["Service", data.service],
-    ["Owner", data.ownerName],
-    ["Email", data.email],
-    ["Phone", data.phone],
-    ["Address", data.address || "Not provided"],
-    ["Pet", data.petName],
-    ["Breed", data.breed],
-    ["Age", data.age],
-    ["Weight", data.weight],
-    ["Gender", data.gender],
-    ["Medical conditions", data.medical],
-    ["Aggression history", data.aggression],
-    ["Preferred", `${data.preferredDate} at ${data.preferredTime}`],
-    [
-      "Alternate",
-      data.alternateDate
-        ? `${data.alternateDate} at ${data.alternateTime || "any time"}`
-        : "Not provided",
-    ],
-    ["Notes", data.notes || "None"],
-  ];
-
-  return `
-    <div style="font-family:Arial,sans-serif;color:#292822;max-width:680px;margin:auto">
-      <div style="background:#c1d72d;padding:24px;border-radius:16px 16px 0 0">
-        <h1 style="margin:0;font-size:24px">New ${sanitize(data.location)} grooming request</h1>
-      </div>
-      <div style="border:1px solid #dedbd2;border-top:0;padding:24px;border-radius:0 0 16px 16px">
-        <p style="margin-top:0">This is an appointment request, not a confirmed booking.</p>
-        <table style="width:100%;border-collapse:collapse">
-          ${rows
-            .map(
-              ([label, value]) => `
-                <tr>
-                  <th style="text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid #eee;width:34%">${sanitize(label)}</th>
-                  <td style="padding:10px;border-bottom:1px solid #eee">${sanitize(value)}</td>
-                </tr>`,
-            )
-            .join("")}
-        </table>
-      </div>
-    </div>
-  `;
-}
 
 export async function POST(request: Request) {
   try {
@@ -121,7 +68,22 @@ export async function POST(request: Request) {
         .filter(([key, value]) => key !== "photo" && typeof value === "string")
         .map(([key, value]) => [key, String(value)]),
     );
-    const parsed = bookingSchema.safeParse(raw);
+
+    const windowsResult = parseAvailabilityWindowsJson(raw.availabilityWindows);
+    if (!windowsResult.success) {
+      return NextResponse.json(
+        {
+          message: "Please check the highlighted fields.",
+          fieldErrors: { availability: [windowsResult.error] },
+        },
+        { status: 400 },
+      );
+    }
+
+    const parsed = bookingSchema.safeParse({
+      ...raw,
+      availability: formatAvailability(windowsResult.data),
+    });
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -166,23 +128,78 @@ export async function POST(request: Request) {
             {
               filename: photo.name.replace(/[^\w.-]/g, "_"),
               content: Buffer.from(await photo.arrayBuffer()),
+              contentType: photo.type || "image/jpeg",
+              contentId: PHOTO_CONTENT_ID,
             },
           ]
         : undefined;
 
+    const serviceLabel = formatService(parsed.data.service).toLowerCase();
+    const subject = `New ${parsed.data.location} request — ${parsed.data.petName} (${serviceLabel})`;
+
+    const html = bookingEmail(parsed.data, {
+      photoContentId: attachments?.length ? PHOTO_CONTENT_ID : undefined,
+    });
+
+    const text = [
+      `New ${parsed.data.location} request — ${parsed.data.petName} (${serviceLabel})`,
+      `Full name: ${parsed.data.ownerName}`,
+      ``,
+      `Availability:`,
+      parsed.data.availability,
+      ``,
+      `Contact:`,
+      `Phone: ${parsed.data.phone}`,
+      `Email: ${parsed.data.email}`,
+      ...(parsed.data.location === "mobile"
+        ? [`Service location: ${parsed.data.address}`]
+        : []),
+      ``,
+      `Pet details:`,
+      `Breed: ${parsed.data.breed}`,
+      `Age: ${parsed.data.age}`,
+      `Weight: ${parsed.data.weight}`,
+      `Gender: ${formatGender(parsed.data.gender)}`,
+      `Medical: ${parsed.data.medical}`,
+      `Aggression: ${
+        parsed.data.aggression === "yes"
+          ? "Yes — review before booking"
+          : "No"
+      }`,
+      ...(parsed.data.notes?.trim().length
+        ? [`Notes: ${parsed.data.notes.trim()}`]
+        : []),
+    ].join("\n");
+
     const result = await resend.emails.send({
       from:
         process.env.BOOKING_FROM_EMAIL ||
-        "The Bark of the Town <onboarding@resend.dev>",
+        "The Bark of the Town <appointments@tbottinc.com>",
       to: process.env.BOOKING_TO_EMAIL || site.email,
       replyTo: parsed.data.email,
-      subject: `New ${parsed.data.location} request — ${parsed.data.petName}`,
-      html: bookingEmail(parsed.data),
+      ...(process.env.BOOKING_CC_EMAIL?.trim()
+        ? { cc: process.env.BOOKING_CC_EMAIL.trim() }
+        : {}),
+      subject,
+      html,
+      text,
       attachments,
     });
 
     if (result.error) {
-      throw new Error(result.error.message);
+      console.error("Resend send failed", {
+        error: result.error,
+        subject,
+        to: process.env.BOOKING_TO_EMAIL || site.email,
+      });
+      return NextResponse.json(
+        {
+          code: "delivery_failed",
+          message:
+            "We couldn’t send your request yet. Please email us directly to book.",
+        },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({
@@ -194,6 +211,7 @@ export async function POST(request: Request) {
     console.error("Booking request failed", error);
     return NextResponse.json(
       {
+        code: "delivery_failed",
         message:
           "We couldn’t send your request. Please try again or email us directly.",
         email: site.email,

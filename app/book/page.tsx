@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { site } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Request a Grooming Appointment",
+  title: "Book an Appointment",
   description:
     "Request a salon or mobile dog grooming appointment with The Bark of the Town in Chicago.",
   alternates: { canonical: "/book" },
@@ -71,7 +71,8 @@ export default function BookPage() {
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Same-day and next-day appointments are not available through this
-              form. Choose a preferred and alternate time between 9 AM and 6 PM.
+              form. Please provide 3 date and time windows so we can find a
+              time that works.
             </p>
           </Card>
           <Card className="border-0 bg-white p-6 ring-1 ring-black/7">
