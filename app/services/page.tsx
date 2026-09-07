@@ -18,18 +18,30 @@ export const metadata: Metadata = {
 
 function PriceList({
   items,
+  dark = false,
 }: {
   items: ReadonlyArray<readonly [string, string]>;
+  dark?: boolean;
 }) {
   return (
-    <dl className="mt-6 divide-y divide-black/7">
+    <dl className={dark ? "mt-6 divide-y divide-white/10" : "mt-6 divide-y divide-black/7"}>
       {items.map(([label, price]) => (
         <div
           key={label}
-          className="flex items-center justify-between gap-6 py-3.5"
+          className="flex items-baseline justify-between gap-6 py-3.5"
         >
-          <dt className="text-ink/70">{label}</dt>
-          <dd className="font-heading text-lg font-semibold text-ink">{price}</dd>
+          <dt className={dark ? "font-normal text-white/70" : "font-normal text-ink/70"}>
+            {label}
+          </dt>
+          <dd
+            className={
+              dark
+                ? "shrink-0 text-base font-bold text-white sm:text-lg"
+                : "shrink-0 text-base font-bold text-ink sm:text-lg"
+            }
+          >
+            {price}
+          </dd>
         </div>
       ))}
     </dl>
@@ -103,9 +115,8 @@ export default function ServicesPage() {
                 className="size-16 object-contain"
               />
               <div>
-                <p className="eyebrow">Quick care</p>
-                <h2 className="mt-1 font-heading text-3xl font-semibold">
-                  Nail trim
+                <h2 className="mt-1 font-heading text-3xl font-semibold tracking-wide">
+                  NAIL TRIM ONLY
                 </h2>
               </div>
             </div>
@@ -121,9 +132,8 @@ export default function ServicesPage() {
                 <CircleDollarSign className="size-7" />
               </span>
               <div>
-                <p className="eyebrow">Customize the visit</p>
-                <h2 className="mt-1 font-heading text-3xl font-semibold">
-                  Add-on care
+                <h2 className="mt-1 font-heading text-3xl font-semibold tracking-wide">
+                  ADDITIONAL SERVICES
                 </h2>
               </div>
             </div>
@@ -143,9 +153,8 @@ export default function ServicesPage() {
                 className="size-16 object-contain"
               />
               <div>
-                <p className="eyebrow">Fresh & clean</p>
-                <h2 className="mt-1 font-heading text-3xl font-semibold">
-                  Bath only
+                <h2 className="mt-1 font-heading text-3xl font-semibold tracking-wide">
+                  BATH ONLY
                 </h2>
               </div>
             </div>
@@ -171,9 +180,8 @@ export default function ServicesPage() {
                 />
               </div>
               <div>
-                <p className="eyebrow text-lime">The full treatment</p>
                 <h2 className="mt-1 font-heading text-3xl font-semibold">
-                  Full groom
+                  Full Groom/HAIR CUT
                 </h2>
               </div>
             </div>
@@ -181,19 +189,7 @@ export default function ServicesPage() {
               Everything in the bath service, plus a complete haircut and
               careful hand-scissor finish.
             </p>
-            <div className="mt-6">
-              <dl className="divide-y divide-white/10">
-                {salonPricing.groom.map(([label, price]) => (
-                  <div
-                    key={label}
-                    className="flex items-center justify-between gap-6 py-3.5"
-                  >
-                    <dt className="text-white/65">{label}</dt>
-                    <dd className="font-heading text-lg font-semibold">{price}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+            <PriceList items={salonPricing.groom} dark />
           </Card>
         </div>
 

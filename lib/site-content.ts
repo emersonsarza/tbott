@@ -67,28 +67,42 @@ export const salonPricing = {
     ["1 pet", "$20"],
     ["2 pets", "$30"],
     ["3 pets", "$40"],
-    ["4 or more pets", "$50+"],
+    ["4 or more pets", "+$50"],
   ],
   addOns: [
-    ["Ear cleaning", "$5–$10"],
-    ["Paw & pad trim", "$10"],
-    ["Face trim", "$15"],
-    ["Sanitary trim", "$15"],
-    ["Teeth brushing", "$10"],
-    ["Anal glands", "$15"],
+    ["Ear Cleaning", "$5 - $10"],
+    ["Paw and Pad trim", "$10"],
+    ["Face Trim", "$15"],
+    ["Sanitary Trim", "$15"],
+    ["Teethbrush", "$10"],
+    ["Anal Glands", "$15"],
   ],
   bath: [
-    ["Small", "$65+"],
-    ["Medium", "$75+"],
-    ["Large", "$85+"],
-    ["Long-hair add-on", "$10–$20+"],
+    ["SMALL", "$65+"],
+    ["MEDIUM", "$75+"],
+    ["LARGE", "$85+"],
+    ["LONG HAIR", "$10 - $20+"],
   ],
   groom: [
-    ["Toy / small", "$85+"],
-    ["Medium", "$100+"],
-    ["Large", "$125+"],
-    ["X-large", "$140+"],
+    ["Toy/Small", "$85+"],
+    ["MEDIUM", "$100+"],
+    ["LARGE", "$125+"],
+    ["X-Large", "$140+"],
   ],
+} as const;
+
+/** Mobile starting prices — wording mirrors the live WordPress services page. */
+export const mobilePricing = {
+  bath: {
+    title: "BATH ONLY",
+    price: "$130.00",
+    lead: "MOBILE SERVICES START@",
+  },
+  groom: {
+    title: "Full Groom/HAIR CUT",
+    price: "$145.00",
+    lead: "MOBILE SERVICES START@",
+  },
 } as const;
 
 export const galleryImages = [

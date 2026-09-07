@@ -18,6 +18,7 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { mobilePricing } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Mobile Grooming at Your Door",
@@ -177,13 +178,18 @@ export default function MobileServicesPage() {
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             <Card className="border-0 bg-white p-7 shadow-md ring-1 ring-black/7">
-              <p className="eyebrow">Bath only</p>
-              <p className="mt-4 font-heading text-5xl font-semibold text-ink">
-                $130<span className="text-xl text-muted-foreground">+</span>
-              </p>
-              <p className="mt-4 leading-7 text-muted-foreground">
+              <h3 className="font-heading text-2xl font-semibold tracking-wide text-ink">
+                {mobilePricing.bath.title}
+              </h3>
+              <p className="mt-5 leading-7 text-muted-foreground">
                 Hypoallergenic bath, dry, ears, nails, teeth brushing, and
                 glands on request.
+              </p>
+              <p className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-base text-ink">
+                <span className="font-normal tracking-wide">
+                  {mobilePricing.bath.lead}
+                </span>
+                <span className="font-bold">{mobilePricing.bath.price}</span>
               </p>
               <Link
                 href="/book?location=mobile&service=bath"
@@ -193,13 +199,18 @@ export default function MobileServicesPage() {
               </Link>
             </Card>
             <Card className="border-0 bg-red p-7 text-white shadow-xl ring-0">
-              <p className="eyebrow text-white/65">Full groom</p>
-              <p className="mt-4 font-heading text-5xl font-semibold">
-                $145<span className="text-xl text-white/65">+</span>
-              </p>
-              <p className="mt-4 leading-7 text-white/70">
+              <h3 className="font-heading text-2xl font-semibold text-white">
+                {mobilePricing.groom.title}
+              </h3>
+              <p className="mt-5 leading-7 text-white/70">
                 Complete bath service plus haircut and a careful hand-scissor
                 finish.
+              </p>
+              <p className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-base text-white">
+                <span className="font-normal tracking-wide">
+                  {mobilePricing.groom.lead}
+                </span>
+                <span className="font-bold">{mobilePricing.groom.price}</span>
               </p>
               <Link
                 href="/book?location=mobile&service=full-groom"
