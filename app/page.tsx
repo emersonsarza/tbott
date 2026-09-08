@@ -21,7 +21,7 @@ import {
 } from "@/components/marketing";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { site } from "@/lib/site-content";
+import { cta, site } from "@/lib/site-content";
 
 export default function Home() {
   return (
@@ -32,7 +32,7 @@ export default function Home() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-lime-dark/15 bg-white/80 px-3.5 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-lime-dark shadow-sm">
               <Star className="size-3.5 fill-lime text-lime-dark" />
-              Chicago salon & mobile grooming
+              Chicago Salon & Mobile Grooming
             </div>
             <h1 className="mt-7 text-balance font-heading text-[clamp(3.4rem,7vw,6.6rem)] font-semibold leading-[0.92] tracking-[-0.055em] text-ink">
               Good dogs.
@@ -50,7 +50,7 @@ export default function Home() {
                   "h-13 px-7 text-base shadow-[0_12px_30px_rgba(215,67,45,0.25)]",
                 )}
               >
-                Request an appointment <ArrowRight />
+                {cta.requestAppointment} <ArrowRight />
               </Link>
               <Link
                 href="/services"
@@ -59,13 +59,13 @@ export default function Home() {
                   "h-13 border-black/12 bg-white/60 px-7 text-base",
                 )}
               >
-                Explore services
+                {cta.exploreServices}
               </Link>
             </div>
             <div className="mt-10 flex flex-wrap gap-2.5">
-              <TrustPill>Gentle one-on-one care</TrustPill>
-              <TrustPill>Salon or mobile</TrustPill>
-              <TrustPill>Hypoallergenic products</TrustPill>
+              <TrustPill>Gentle One-on-One Care</TrustPill>
+              <TrustPill>Salon or Mobile</TrustPill>
+              <TrustPill>Hypoallergenic Products</TrustPill>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ export default function Home() {
               <div className="flex items-center justify-between gap-4 p-5">
                 <div>
                   <p className="font-heading text-xl font-semibold text-ink">
-                    From scruffy to stunning
+                    From Scruffy to Stunning
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
                     A thoughtful groom, tailored to your pup.
@@ -109,9 +109,9 @@ export default function Home() {
       <section className="border-y border-black/6 bg-white">
         <div className="site-container grid gap-px bg-black/6 sm:grid-cols-3">
           {[
-            [MapPin, "Uptown salon", "1041 W Lawrence Ave"],
-            [Clock3, "Appointments preferred", "Walk-ins as space allows"],
-            [Heart, "Care-first grooming", "Every coat. Every temperament."],
+            [MapPin, "Uptown Salon", "1041 W Lawrence Ave"],
+            [Clock3, "Appointments Preferred", "Walk-ins as space allows"],
+            [Heart, "Care-First Grooming", "Every coat. Every temperament."],
           ].map(([Icon, title, body]) => {
             const IconComponent = Icon as typeof MapPin;
             return (
@@ -137,7 +137,7 @@ export default function Home() {
       <section className="site-container py-20 lg:py-28">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
-            eyebrow="Salon services"
+            eyebrow="Salon Services"
             title="Everything your dog needs to feel their best."
             description="Straightforward care, transparent starting prices, and no assembly-line grooming."
           />
@@ -145,7 +145,7 @@ export default function Home() {
             href="/services"
             className="inline-flex shrink-0 items-center gap-2 font-bold text-red hover:gap-3"
           >
-            See full pricing <ArrowRight className="size-4" />
+            {cta.seeFullPricing} <ArrowRight className="size-4" />
           </Link>
         </div>
         <div className="mt-12">
@@ -173,7 +173,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <p className="eyebrow text-lime">Why pet parents choose us</p>
+            <p className="eyebrow text-lime">Why Pet Parents Choose Us</p>
             <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
               Less waiting. Less stress. More tail wags.
             </h2>
@@ -183,10 +183,10 @@ export default function Home() {
             </p>
             <div className="mt-9 grid gap-5 sm:grid-cols-2">
               {[
-                [ShieldCheck, "Experienced groomers", "Knowledgeable care from trained professionals."],
-                [HomeIcon, "Calmer environment", "A more private, personal grooming experience."],
-                [Truck, "We come to you", "Mobile service at your home or workplace."],
-                [Sparkles, "Quality finish", "Careful bathing, drying, clipping, and details."],
+                [ShieldCheck, "Experienced Groomers", "Knowledgeable care from trained professionals."],
+                [HomeIcon, "Calmer Environment", "A more private, personal grooming experience."],
+                [Truck, "We Come to You", "Mobile service at your home or workplace."],
+                [Sparkles, "Quality Finish", "Careful bathing, drying, clipping, and details."],
               ].map(([Icon, title, body]) => {
                 const IconComponent = Icon as typeof Sparkles;
                 return (
@@ -209,7 +209,7 @@ export default function Home() {
                 "mt-10 h-12 border-white/20 bg-white/5 px-6 text-white hover:bg-white/10 hover:text-white",
               )}
             >
-              Explore mobile grooming <ArrowRight />
+              {cta.exploreMobileGrooming} <ArrowRight />
             </Link>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function Home() {
       <section className="site-container py-20 lg:py-28">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
-            eyebrow="Fresh from the groomery"
+            eyebrow="Fresh from the Groomery"
             title="Real pups. Real transformations."
             description="A few of our favorite before-and-after moments."
           />

@@ -6,7 +6,7 @@ import { ShowcaseBanner } from "@/components/showcase-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
-import { site } from "@/lib/site-content";
+import { cta, site } from "@/lib/site-content";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -93,7 +93,7 @@ export default function RootLayout({
           href="#main-content"
           className="fixed left-4 top-3 z-100 -translate-y-24 rounded-lg bg-ink px-4 py-2 text-sm font-bold text-white transition focus:translate-y-0"
         >
-          Skip to content
+          {cta.skipToContent}
         </a>
         <Suspense fallback={null}>
           <ShowcaseBanner />

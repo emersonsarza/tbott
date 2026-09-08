@@ -49,7 +49,7 @@ function DatePicker({
         month: "short",
         day: "numeric",
       })
-    : "Choose date";
+        : "Choose Date";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

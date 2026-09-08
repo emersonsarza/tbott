@@ -15,7 +15,7 @@ export default function GalleryPage() {
     <>
       <section className="page-hero">
         <div className="site-container py-16 text-center lg:py-24">
-          <p className="eyebrow">Before & after</p>
+          <p className="eyebrow">Before & After</p>
           <h1 className="mx-auto mt-4 max-w-4xl text-balance font-heading text-5xl font-semibold leading-[0.98] tracking-[-0.045em] text-ink sm:text-7xl">
             The proof is in the poof.
           </h1>
@@ -27,7 +27,7 @@ export default function GalleryPage() {
       </section>
       <section className="site-container py-16 lg:py-24">
         <SectionHeading
-          eyebrow="Fresh from the groomery"
+          eyebrow="Fresh from the Groomery"
           title="Six very good transformations."
           description="Open any photo for a closer look."
         />

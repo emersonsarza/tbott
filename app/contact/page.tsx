@@ -13,7 +13,7 @@ import { BookingCta, SectionHeading } from "@/components/marketing";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { policies, site } from "@/lib/site-content";
+import { cta, policies, site } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -28,7 +28,7 @@ export default function ContactPage() {
       <section className="page-hero">
         <div className="site-container grid items-center gap-10 py-16 lg:grid-cols-[1fr_0.8fr] lg:py-24">
           <div>
-            <p className="eyebrow">Contact us</p>
+            <p className="eyebrow">Contact Us</p>
             <h1 className="mt-4 max-w-3xl text-balance font-heading text-5xl font-semibold leading-[0.98] tracking-[-0.045em] text-ink sm:text-7xl">
               Questions? We’re all ears.
             </h1>
@@ -42,7 +42,7 @@ export default function ContactPage() {
                 href="/book"
                 className={cn(buttonVariants({ size: "lg" }), "h-12 px-6")}
               >
-                Request appointment <ArrowRight />
+                {cta.requestAppointment} <ArrowRight />
               </Link>
               <a
                 href={`mailto:${site.email}`}
@@ -51,7 +51,7 @@ export default function ContactPage() {
                   "h-12 bg-white/60 px-6",
                 )}
               >
-                Email us
+                {cta.emailUs}
               </a>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function ContactPage() {
             <span className="grid size-12 place-items-center rounded-2xl bg-lime-soft text-lime-dark">
               <MapPin className="size-5" />
             </span>
-            <h2 className="mt-6 font-heading text-2xl font-semibold">Visit us</h2>
+            <h2 className="mt-6 font-heading text-2xl font-semibold">Visit Us</h2>
             <p className="mt-3 leading-7 text-muted-foreground">
               {site.address.full}
             </p>
@@ -91,7 +91,7 @@ export default function ContactPage() {
               rel="noreferrer"
               className="mt-5 inline-flex items-center gap-2 font-bold text-red"
             >
-              Get directions <ArrowRight className="size-4" />
+              {cta.getDirections} <ArrowRight className="size-4" />
             </a>
           </Card>
           <Card className="border-0 bg-white p-7 shadow-sm ring-1 ring-black/7">
@@ -132,7 +132,7 @@ export default function ContactPage() {
       <section className="bg-warm py-20 lg:py-28">
         <div className="site-container">
           <SectionHeading
-            eyebrow="Before your appointment"
+            eyebrow="Before Your Appointment"
             title="Good to know."
             description="Clear expectations help every visit run smoothly for pets, people, and groomers."
           />

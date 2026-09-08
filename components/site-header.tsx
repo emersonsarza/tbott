@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 
-import { navigation } from "@/lib/site-content";
+import { cta, navigation } from "@/lib/site-content";
 import { buttonVariants, Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -55,7 +55,7 @@ export function SiteHeader() {
             href="/book"
             className={cn(buttonVariants({ size: "lg" }), "ml-3 h-11 px-5")}
           >
-            Book a groom
+            {cta.bookGroom}
           </Link>
         </nav>
 
@@ -66,7 +66,7 @@ export function SiteHeader() {
                 variant="outline"
                 size="icon-lg"
                 className="lg:hidden"
-                aria-label="Open navigation"
+                aria-label="Open Navigation"
               />
             }
           >
@@ -95,7 +95,7 @@ export function SiteHeader() {
                 href="/book"
                 className={cn(buttonVariants({ size: "lg" }), "mt-3 h-12")}
               >
-                Book a groom
+                {cta.bookGroom}
               </Link>
             </nav>
           </SheetContent>

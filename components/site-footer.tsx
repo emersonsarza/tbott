@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, AtSign, Mail, MapPin } from "lucide-react";
 
-import { navigation, site } from "@/lib/site-content";
+import { cta, navigation, site } from "@/lib/site-content";
 
 export function SiteFooter() {
   return (
@@ -44,14 +44,14 @@ export function SiteFooter() {
             ))}
             <li>
               <Link className="font-semibold text-lime" href="/book">
-                Book a groom
+                {cta.bookGroom}
               </Link>
             </li>
           </ul>
         </div>
 
         <div>
-          <p className="eyebrow text-lime">Visit & connect</p>
+          <p className="eyebrow text-lime">Visit & Connect</p>
           <ul className="mt-5 space-y-4 text-white/70">
             <li>
               <a

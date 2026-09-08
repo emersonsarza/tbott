@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { services, site } from "@/lib/site-content";
+import { cta, services, site } from "@/lib/site-content";
 
 export function SectionHeading({
   eyebrow,
@@ -73,7 +73,7 @@ export function ServiceCards() {
               href={`/services#${service.id}`}
               className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-red transition hover:gap-3"
             >
-              View service <ArrowRight className="size-4" />
+              {cta.viewService} <ArrowRight className="size-4" />
             </Link>
           </CardContent>
         </Card>
@@ -94,7 +94,7 @@ export function BookingCta({
       <div className="relative overflow-hidden rounded-[2rem] bg-red px-6 py-12 text-white shadow-[0_30px_80px_rgba(194,55,38,0.25)] sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-16 lg:py-16">
         <div className="absolute -right-24 -top-24 size-72 rounded-full border-[48px] border-white/7" />
         <div className="relative max-w-2xl">
-          <p className="eyebrow text-white/70">Request an appointment</p>
+          <p className="eyebrow text-white/70">{cta.requestAppointment}</p>
           <h2 className="mt-3 text-balance font-heading text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
             {title}
           </h2>
@@ -108,7 +108,7 @@ export function BookingCta({
               "h-12 bg-white px-6 text-red hover:bg-white/90",
             )}
           >
-            Request appointment <ArrowRight />
+            {cta.requestAppointment} <ArrowRight />
           </Link>
           <a
             href={`mailto:${site.email}`}
@@ -117,7 +117,7 @@ export function BookingCta({
               "h-12 border-white/30 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white",
             )}
           >
-            Ask a question
+            {cta.askQuestion}
           </a>
         </div>
       </div>
@@ -146,5 +146,42 @@ export function TrustPill({ children }: { children: React.ReactNode }) {
       <Sparkles className="size-4 text-red" />
       {children}
     </div>
+  );
+}
+
+/** Price rows: WP-style labels (normal weight) / prices (bold), same typeface. */
+export function PriceList({
+  items,
+  dark = false,
+}: {
+  items: ReadonlyArray<readonly [string, string]>;
+  dark?: boolean;
+}) {
+  return (
+    <dl
+      className={
+        dark ? "mt-6 divide-y divide-white/10" : "mt-6 divide-y divide-black/7"
+      }
+    >
+      {items.map(([label, price]) => (
+        <div
+          key={label}
+          className="flex items-baseline justify-between gap-6 py-3.5 font-sans text-base"
+        >
+          <dt className={dark ? "font-normal text-white/70" : "font-normal text-ink/70"}>
+            {label}
+          </dt>
+          <dd
+            className={
+              dark
+                ? "shrink-0 font-bold text-white"
+                : "shrink-0 font-bold text-ink"
+            }
+          >
+            {price}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }

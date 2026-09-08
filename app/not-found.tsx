@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { cta } from "@/lib/site-content";
 
 export default function NotFound() {
   return (
@@ -21,7 +22,7 @@ export default function NotFound() {
           href="/"
           className={cn(buttonVariants({ size: "lg" }), "mt-8 h-12 px-6")}
         >
-          <ArrowLeft /> Back home
+          <ArrowLeft /> {cta.backHome}
         </Link>
       </div>
       <Image
