@@ -13,12 +13,13 @@ import {
 import {
   BookingCta,
   FeatureList,
+  PriceList,
   SectionHeading,
 } from "@/components/marketing";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { mobilePricing } from "@/lib/site-content";
+import { cta, mobilePricing } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Mobile Grooming at Your Door",
@@ -43,7 +44,7 @@ export default function MobileServicesPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(193,215,45,0.24),transparent_34rem)]" />
         <div className="site-container relative grid items-center gap-12 py-16 lg:min-h-[660px] lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div>
-            <p className="eyebrow text-lime">Mobile grooming</p>
+            <p className="eyebrow text-lime">Mobile Grooming</p>
             <h1 className="mt-4 max-w-3xl text-balance font-heading text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-7xl">
               A full groomery, right outside your door.
             </h1>
@@ -60,7 +61,7 @@ export default function MobileServicesPage() {
                   "h-12 bg-lime px-6 text-ink hover:bg-lime/85",
                 )}
               >
-                Request mobile service <ArrowRight />
+                {cta.requestMobileService} <ArrowRight />
               </Link>
               <a
                 href="#mobile-pricing"
@@ -69,7 +70,7 @@ export default function MobileServicesPage() {
                   "h-12 border-white/20 bg-white/5 px-6 text-white hover:bg-white/10 hover:text-white",
                 )}
               >
-                See starting prices
+                {cta.seeStartingPrices}
               </a>
             </div>
           </div>
@@ -87,7 +88,7 @@ export default function MobileServicesPage() {
               />
               <div className="flex items-center gap-3 p-5 text-ink">
                 <Truck className="size-5 text-red" />
-                <p className="font-bold">Private care, wherever you are</p>
+                <p className="font-bold">Private Care, Wherever You Are</p>
               </div>
             </div>
           </div>
@@ -97,7 +98,7 @@ export default function MobileServicesPage() {
       <section className="site-container py-20 lg:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <SectionHeading
-            eyebrow="Why mobile"
+            eyebrow="Why Mobile"
             title="Less disruption for you. Less stress for your dog."
             description="Everything needed for a polished groom is on board. Your dog gets focused care in a calm space just steps from home."
           />
@@ -108,7 +109,7 @@ export default function MobileServicesPage() {
       <section className="bg-lime-soft py-20 lg:py-28">
         <div className="site-container">
           <SectionHeading
-            eyebrow="A simple process"
+            eyebrow="A Simple Process"
             title="From request to fresh in three steps."
             align="center"
           />
@@ -117,19 +118,19 @@ export default function MobileServicesPage() {
               [
                 "01",
                 House,
-                "Tell us where",
+                "Tell Us Where",
                 "Share your location, your dog’s details, and a few preferred appointment times.",
               ],
               [
                 "02",
                 Clock3,
-                "We confirm",
+                "We Confirm",
                 "Our team replies with availability, timing, and a tailored price estimate.",
               ],
               [
                 "03",
                 Sparkles,
-                "We roll up",
+                "We Roll Up",
                 "The mobile unit arrives for a private grooming visit lasting about 60–90 minutes.",
               ],
             ].map(([number, Icon, title, body]) => {
@@ -166,7 +167,7 @@ export default function MobileServicesPage() {
       >
         <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
           <div>
-            <p className="eyebrow">Mobile pricing</p>
+            <p className="eyebrow">Mobile Pricing</p>
             <h2 className="mt-3 text-balance font-heading text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
               Premium convenience, transparent starting points.
             </h2>
@@ -185,17 +186,14 @@ export default function MobileServicesPage() {
                 Hypoallergenic bath, dry, ears, nails, teeth brushing, and
                 glands on request.
               </p>
-              <p className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-base text-ink">
-                <span className="font-normal tracking-wide">
-                  {mobilePricing.bath.lead}
-                </span>
-                <span className="font-bold">{mobilePricing.bath.price}</span>
-              </p>
+              <PriceList
+                items={[[mobilePricing.bath.lead, mobilePricing.bath.price]]}
+              />
               <Link
                 href="/book?location=mobile&service=bath"
                 className="mt-7 inline-flex items-center gap-2 font-bold text-red"
               >
-                Request a bath <ArrowRight className="size-4" />
+                {cta.requestBath} <ArrowRight className="size-4" />
               </Link>
             </Card>
             <Card className="border-0 bg-red p-7 text-white shadow-xl ring-0">
@@ -206,17 +204,15 @@ export default function MobileServicesPage() {
                 Complete bath service plus haircut and a careful hand-scissor
                 finish.
               </p>
-              <p className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-base text-white">
-                <span className="font-normal tracking-wide">
-                  {mobilePricing.groom.lead}
-                </span>
-                <span className="font-bold">{mobilePricing.groom.price}</span>
-              </p>
+              <PriceList
+                items={[[mobilePricing.groom.lead, mobilePricing.groom.price]]}
+                dark
+              />
               <Link
                 href="/book?location=mobile&service=full-groom"
                 className="mt-7 inline-flex items-center gap-2 font-bold text-white"
               >
-                Request a full groom <ArrowRight className="size-4" />
+                {cta.requestFullGroom} <ArrowRight className="size-4" />
               </Link>
             </Card>
           </div>

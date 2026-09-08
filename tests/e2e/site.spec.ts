@@ -23,14 +23,14 @@ test("gallery opens an accessible lightbox", async ({ page }) => {
   await page.goto("/gallery");
   await page
     .getByRole("button", {
-      name: /Open image: Before and after grooming/,
+      name: /Open Image: Before and after grooming/,
     })
     .first()
     .click();
 
   await expect(
     page.getByRole("dialog").getByRole("heading", {
-      name: "Grooming transformation",
+      name: "Grooming Transformation",
     }),
   ).toBeAttached();
 });
@@ -48,9 +48,9 @@ test("booking form shows the success state", async ({ page }) => {
     });
   });
   await page.goto("/book");
-  await page.getByRole("button", { name: "Request appointment" }).click();
+  await page.getByRole("button", { name: "Request Appointment" }).click();
   await expect(
-    page.getByRole("heading", { name: "Showcase request validated" }),
+    page.getByRole("heading", { name: "Showcase Request Validated" }),
   ).toBeVisible();
 });
 
@@ -65,7 +65,7 @@ test("booking form shows an API error", async ({ page }) => {
     });
   });
   await page.goto("/book");
-  await page.getByRole("button", { name: "Request appointment" }).click();
+  await page.getByRole("button", { name: "Request Appointment" }).click();
   await expect(page.getByText("We couldn’t send this yet")).toBeVisible();
   await expect(
     page.getByText("We couldn’t send your request. Please try again."),

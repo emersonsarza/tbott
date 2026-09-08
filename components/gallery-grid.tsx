@@ -27,7 +27,7 @@ export function GalleryGrid({ limit }: { limit?: number }) {
             type="button"
             className="group relative overflow-hidden rounded-3xl bg-muted text-left shadow-[0_18px_50px_rgba(42,41,36,0.08)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/40"
             onClick={() => setActive(image)}
-            aria-label={`Open image: ${image.alt}`}
+            aria-label={`Open Image: ${image.alt}`}
           >
             <Image
               src={image.src}
@@ -47,7 +47,7 @@ export function GalleryGrid({ limit }: { limit?: number }) {
 
       <Dialog open={Boolean(active)} onOpenChange={(open) => !open && setActive(null)}>
         <DialogContent className="w-[min(96vw,1100px)] max-w-none overflow-hidden border-0 bg-black p-2">
-          <DialogTitle className="sr-only">Grooming transformation</DialogTitle>
+          <DialogTitle className="sr-only">Grooming Transformation</DialogTitle>
           <DialogDescription className="sr-only">
             {active?.alt}
           </DialogDescription>

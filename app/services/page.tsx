@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarCheck, CircleDollarSign } from "lucide-react";
 
-import { BookingCta, SectionHeading } from "@/components/marketing";
+import { BookingCta, PriceList, SectionHeading } from "@/components/marketing";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { salonPricing, services } from "@/lib/site-content";
+import { cta, salonPricing, services } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Uptown Salon Grooming",
@@ -16,45 +16,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
-function PriceList({
-  items,
-  dark = false,
-}: {
-  items: ReadonlyArray<readonly [string, string]>;
-  dark?: boolean;
-}) {
-  return (
-    <dl className={dark ? "mt-6 divide-y divide-white/10" : "mt-6 divide-y divide-black/7"}>
-      {items.map(([label, price]) => (
-        <div
-          key={label}
-          className="flex items-baseline justify-between gap-6 py-3.5"
-        >
-          <dt className={dark ? "font-normal text-white/70" : "font-normal text-ink/70"}>
-            {label}
-          </dt>
-          <dd
-            className={
-              dark
-                ? "shrink-0 text-base font-bold text-white sm:text-lg"
-                : "shrink-0 text-base font-bold text-ink sm:text-lg"
-            }
-          >
-            {price}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 export default function ServicesPage() {
   return (
     <>
       <section className="page-hero">
         <div className="site-container grid items-center gap-10 py-16 lg:grid-cols-[1fr_0.7fr] lg:py-24">
           <div>
-            <p className="eyebrow">Uptown grooming salon</p>
+            <p className="eyebrow">Uptown Grooming Salon</p>
             <h1 className="mt-4 max-w-4xl text-balance font-heading text-5xl font-semibold leading-[0.98] tracking-[-0.045em] text-ink sm:text-7xl">
               Salon care that puts your dog first.
             </h1>
@@ -67,7 +35,7 @@ export default function ServicesPage() {
                 href="/book?location=salon"
                 className={cn(buttonVariants({ size: "lg" }), "h-12 px-6")}
               >
-                Request salon service <ArrowRight />
+                {cta.requestSalonService} <ArrowRight />
               </Link>
               <a
                 href="#pricing"
@@ -76,7 +44,7 @@ export default function ServicesPage() {
                   "h-12 bg-white/60 px-6",
                 )}
               >
-                View pricing
+                {cta.viewPricing}
               </a>
             </div>
           </div>
@@ -96,7 +64,7 @@ export default function ServicesPage() {
 
       <section className="site-container py-16 lg:py-24" id="pricing">
         <SectionHeading
-          eyebrow="Services & starting prices"
+          eyebrow="Services & Starting Prices"
           title="Clear options for every kind of cleanup."
           description="Final pricing depends on coat condition, size, temperament, and the time needed. Please contact us about weight restrictions."
         />
@@ -116,14 +84,14 @@ export default function ServicesPage() {
               />
               <div>
                 <h2 className="mt-1 font-heading text-3xl font-semibold tracking-wide">
-                  NAIL TRIM ONLY
+                  {salonPricing.nails.title}
                 </h2>
               </div>
             </div>
             <p className="mt-5 leading-7 text-muted-foreground">
               Nail trim and/or gentle dremel when your pet is comfortable.
             </p>
-            <PriceList items={salonPricing.nails} />
+            <PriceList items={salonPricing.nails.items} />
           </Card>
 
           <Card className="border-0 bg-lime-soft p-7 shadow-sm ring-1 ring-lime-dark/10 sm:p-9">
@@ -133,11 +101,11 @@ export default function ServicesPage() {
               </span>
               <div>
                 <h2 className="mt-1 font-heading text-3xl font-semibold tracking-wide">
-                  ADDITIONAL SERVICES
+                  {salonPricing.addOns.title}
                 </h2>
               </div>
             </div>
-            <PriceList items={salonPricing.addOns} />
+            <PriceList items={salonPricing.addOns.items} />
           </Card>
 
           <Card
@@ -154,7 +122,7 @@ export default function ServicesPage() {
               />
               <div>
                 <h2 className="mt-1 font-heading text-3xl font-semibold tracking-wide">
-                  BATH ONLY
+                  {salonPricing.bath.title}
                 </h2>
               </div>
             </div>
@@ -162,7 +130,7 @@ export default function ServicesPage() {
               Hypoallergenic bath, towel or hand blow dry, ear cleaning, and
               nail trim or dremel. Teeth brushing and glands included on request.
             </p>
-            <PriceList items={salonPricing.bath} />
+            <PriceList items={salonPricing.bath.items} />
           </Card>
 
           <Card
@@ -181,7 +149,7 @@ export default function ServicesPage() {
               </div>
               <div>
                 <h2 className="mt-1 font-heading text-3xl font-semibold">
-                  Full Groom/HAIR CUT
+                  {salonPricing.groom.title}
                 </h2>
               </div>
             </div>
@@ -189,7 +157,7 @@ export default function ServicesPage() {
               Everything in the bath service, plus a complete haircut and
               careful hand-scissor finish.
             </p>
-            <PriceList items={salonPricing.groom} dark />
+            <PriceList items={salonPricing.groom.items} dark />
           </Card>
         </div>
 

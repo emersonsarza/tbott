@@ -33,19 +33,41 @@ export const navigation = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
+/** Shared UI chrome — Title Case buttons, nav CTAs, and short labels. */
+export const cta = {
+  requestAppointment: "Request Appointment",
+  exploreServices: "Explore Services",
+  bookGroom: "Book a Groom",
+  viewPricing: "View Pricing",
+  requestSalonService: "Request Salon Service",
+  requestMobileService: "Request Mobile Service",
+  askQuestion: "Ask a Question",
+  seeFullPricing: "See Full Pricing",
+  exploreMobileGrooming: "Explore Mobile Grooming",
+  viewService: "View Service",
+  emailUs: "Email Us",
+  getDirections: "Get Directions",
+  seeStartingPrices: "See Starting Prices",
+  requestBath: "Request a Bath",
+  requestFullGroom: "Request a Full Groom",
+  backHome: "Back Home",
+  skipToContent: "Skip to Content",
+  sendAnotherRequest: "Send Another Request",
+} as const;
+
 export const services = [
   {
     id: "nails",
-    title: "Nail trim",
-    eyebrow: "Quick care",
+    title: "Nail Trim",
+    eyebrow: "Quick Care",
     description: "Trim and gentle dremel when your pet is comfortable.",
     price: "From $20",
     image: "/images/services/nail-trim.png",
   },
   {
     id: "bath",
-    title: "Bath & tidy",
-    eyebrow: "Fresh & clean",
+    title: "Bath & Tidy",
+    eyebrow: "Fresh & Clean",
     description:
       "Hypoallergenic bath, careful drying, ear cleaning, and nail trim.",
     price: "From $65",
@@ -53,8 +75,8 @@ export const services = [
   },
   {
     id: "fullgroom",
-    title: "Full groom",
-    eyebrow: "The full treatment",
+    title: "Full Groom",
+    eyebrow: "The Full Treatment",
     description:
       "A complete bath, haircut, hand-scissor finish, ears, and nails.",
     price: "From $85",
@@ -62,33 +84,49 @@ export const services = [
   },
 ] as const;
 
+/**
+ * Salon price lists — labels/caps follow the live WordPress services page.
+ * Dollar amounts are unchanged. Only the price column should render bold.
+ */
 export const salonPricing = {
-  nails: [
-    ["1 pet", "$20"],
-    ["2 pets", "$30"],
-    ["3 pets", "$40"],
-    ["4 or more pets", "+$50"],
-  ],
-  addOns: [
-    ["Ear Cleaning", "$5 - $10"],
-    ["Paw and Pad trim", "$10"],
-    ["Face Trim", "$15"],
-    ["Sanitary Trim", "$15"],
-    ["Teethbrush", "$10"],
-    ["Anal Glands", "$15"],
-  ],
-  bath: [
-    ["SMALL", "$65+"],
-    ["MEDIUM", "$75+"],
-    ["LARGE", "$85+"],
-    ["LONG HAIR", "$10 - $20+"],
-  ],
-  groom: [
-    ["Toy/Small", "$85+"],
-    ["MEDIUM", "$100+"],
-    ["LARGE", "$125+"],
-    ["X-Large", "$140+"],
-  ],
+  nails: {
+    title: "NAIL TRIM ONLY",
+    items: [
+      ["1 pet", "$20"],
+      ["2 pets", "$30"],
+      ["3 pets", "$40"],
+      ["4 or more pets", "+$50"],
+    ],
+  },
+  addOns: {
+    title: "ADDITIONAL SERVICES",
+    items: [
+      ["Ear Cleaning", "$5 - $10"],
+      ["Paw and Pad trim", "$10"],
+      ["Face Trim", "$15"],
+      ["Sanitary Trim", "$15"],
+      ["Teethbrush", "$10"],
+      ["Anal Glands", "$15"],
+    ],
+  },
+  bath: {
+    title: "BATH ONLY",
+    items: [
+      ["SMALL", "$65+"],
+      ["MEDIUM", "$75+"],
+      ["LARGE", "$85+"],
+      ["LONG HAIR", "$10 - $20+"],
+    ],
+  },
+  groom: {
+    title: "Full Groom/HAIR CUT",
+    items: [
+      ["Toy/Small", "$85+"],
+      ["MEDIUM", "$100+"],
+      ["LARGE", "$125+"],
+      ["X-Large", "$140+"],
+    ],
+  },
 } as const;
 
 /** Mobile starting prices — wording mirrors the live WordPress services page. */
@@ -134,7 +172,7 @@ export const galleryImages = [
 
 export const policies = [
   {
-    title: "Pickup & drop-off",
+    title: "Pickup & Drop-Off",
     body: "After the first grooming, pre-booked front-door pickup or drop-off is available for $5 per trip when access is arranged in advance.",
   },
   {

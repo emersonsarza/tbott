@@ -23,7 +23,7 @@ export default async function BookPage() {
     <>
       <section className="page-hero">
         <div className="site-container py-14 text-center lg:py-20">
-          <p className="eyebrow">Appointment request</p>
+          <p className="eyebrow">Appointment Request</p>
           <h1 className="mx-auto mt-4 max-w-4xl text-balance font-heading text-5xl font-semibold leading-[0.98] tracking-[-0.045em] text-ink sm:text-7xl">
             Tell us about your pup.
           </h1>
@@ -49,7 +49,7 @@ export default async function BookPage() {
             <Card className="border-0 bg-lime-soft p-6 ring-1 ring-lime-dark/15">
               <FlaskConical className="size-7 text-lime-dark" />
               <h2 className="mt-5 font-heading text-2xl font-semibold">
-                Showcase mode
+                Showcase Mode
               </h2>
               <p className="mt-3 text-sm leading-6 text-ink/70">
                 This form is for testing the new site. Requests are not
@@ -69,7 +69,7 @@ export default async function BookPage() {
           <Card className="border-0 bg-lime-soft p-6 ring-1 ring-lime-dark/10">
             <Clock3 className="size-6 text-lime-dark" />
             <h2 className="mt-4 font-heading text-xl font-semibold">
-              Planning ahead
+              Planning Ahead
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Same-day and next-day appointments are not available through this

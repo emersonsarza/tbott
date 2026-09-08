@@ -25,7 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { AvailabilityWindows } from "@/components/availability-windows";
 import { type AvailabilityWindow } from "@/lib/availability";
-import { site } from "@/lib/site-content";
+import { cta, site } from "@/lib/site-content";
 import { cn } from "@/lib/utils";
 
 type FieldErrors = Record<string, string[] | undefined>;
@@ -156,8 +156,8 @@ export function BookingForm() {
       setSuccess(message);
       toast.success(
         result.showcase
-          ? "Showcase request validated"
-          : "Appointment request sent",
+          ? "Showcase Request Validated"
+          : "Appointment Request Sent",
       );
       form.reset();
       clearPhoto();
@@ -182,8 +182,8 @@ export function BookingForm() {
         </span>
         <h2 className="mt-6 font-heading text-3xl font-semibold">
           {success.toLowerCase().includes("showcase")
-            ? "Showcase request validated"
-            : "Request received"}
+            ? "Showcase Request Validated"
+            : "Request Received"}
         </h2>
         <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground">
           {success}
@@ -194,7 +194,7 @@ export function BookingForm() {
             : "Remember: your appointment is not confirmed until our team replies."}
         </p>
         <Button className="mt-7" onClick={() => setSuccess("")}>
-          Send another request
+          {cta.sendAnotherRequest}
         </Button>
       </Card>
     );
@@ -219,13 +219,13 @@ export function BookingForm() {
             {
               value: "salon" as const,
               icon: Store,
-              title: "Uptown salon",
+              title: "Uptown Salon",
               body: "Visit us at 1041 W Lawrence Avenue.",
             },
             {
               value: "mobile" as const,
               icon: House,
-              title: "Mobile service",
+              title: "Mobile Service",
               body: "We bring the groomery to your door.",
             },
           ].map((option) => (
@@ -260,7 +260,7 @@ export function BookingForm() {
           <div className="mt-5">
             <Field
               id="address"
-              label="Street address"
+              label="Street Address"
               required
               error={errors.address}
             >
@@ -288,18 +288,18 @@ export function BookingForm() {
           <div>
             <p className="eyebrow">Step 2</p>
             <h2 className="mt-1 font-heading text-2xl font-semibold">
-              Choose a service
+              Choose a Service
             </h2>
           </div>
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           {[
-            ["nail-trim", Sparkles, "Nail trim", "Salon only"],
-            ["bath", Bath, "Bath only", location === "mobile" ? "From $130" : "From $65"],
+            ["nail-trim", Sparkles, "Nail Trim", "Salon Only"],
+            ["bath", Bath, "Bath Only", location === "mobile" ? "From $130" : "From $65"],
             [
               "full-groom",
               Scissors,
-              "Full groom",
+              "Full Groom",
               location === "mobile" ? "From $145" : "From $85",
             ],
           ].map(([value, Icon, title, price]) => {
@@ -343,13 +343,13 @@ export function BookingForm() {
           <div>
             <p className="eyebrow">Step 3</p>
             <h2 className="mt-1 font-heading text-2xl font-semibold">
-              Your details & availability
+              Your Details & Availability
             </h2>
           </div>
         </div>
 
         <div className="mt-7 grid gap-5 sm:grid-cols-2">
-          <Field id="ownerName" label="Your name" required error={errors.ownerName}>
+          <Field id="ownerName" label="Your Name" required error={errors.ownerName}>
             <Input
               id="ownerName"
               name="ownerName"
@@ -381,7 +381,7 @@ export function BookingForm() {
               className={inputClass}
             />
           </Field>
-          <Field id="petName" label="Pet name" required error={errors.petName}>
+          <Field id="petName" label="Pet Name" required error={errors.petName}>
             <Input
               id="petName"
               name="petName"
@@ -437,12 +437,12 @@ export function BookingForm() {
               </option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="unknown">Unknown / prefer not to say</option>
+              <option value="unknown">Unknown / Prefer Not to Say</option>
             </select>
           </Field>
           <Field
             id="aggression"
-            label="Any aggression when handled or groomed?"
+            label="Any Aggression When Handled or Groomed?"
             required
             error={errors.aggression}
           >
@@ -469,7 +469,7 @@ export function BookingForm() {
         <div className="mt-5 space-y-5">
           <Field
             id="medical"
-            label="Medical conditions since the last groom"
+            label="Medical Conditions Since the Last Groom"
             required
             error={errors.medical}
           >
@@ -482,7 +482,7 @@ export function BookingForm() {
               className="min-h-24 bg-white text-base"
             />
           </Field>
-          <Field id="notes" label="Comments or special requests" error={errors.notes}>
+          <Field id="notes" label="Comments or Special Requests" error={errors.notes}>
             <Textarea
               id="notes"
               name="notes"
@@ -492,7 +492,7 @@ export function BookingForm() {
           </Field>
           <Field
             id="photo"
-            label="Recent photo of your dog"
+            label="Recent Photo of Your Dog"
             required
             description="We use this to judge coat condition and size."
             error={errors.photo}
@@ -533,14 +533,14 @@ export function BookingForm() {
                     htmlFor="photo"
                     className="mt-1 inline-block cursor-pointer text-sm font-semibold text-red underline"
                   >
-                    Replace photo
+                    Replace Photo
                   </label>
                 </div>
                 <button
                   type="button"
                   onClick={clearPhoto}
                   className="grid size-9 shrink-0 place-items-center rounded-full text-ink/55 transition hover:bg-white hover:text-ink"
-                  aria-label="Remove photo"
+                  aria-label="Remove Photo"
                 >
                   <X className="size-4" />
                 </button>
@@ -560,7 +560,7 @@ export function BookingForm() {
         <div className="mt-7 rounded-2xl bg-warm p-5">
           <div className="space-y-2">
             <p className="font-bold text-ink">
-              3 appointment options
+              3 Appointment Options
               <span className="ml-1 text-red">*</span>
             </p>
             <p className="text-sm leading-6 text-muted-foreground">
@@ -627,11 +627,11 @@ export function BookingForm() {
       >
         {submitting ? (
           <>
-            <LoaderCircle className="animate-spin" /> Sending request…
+            <LoaderCircle className="animate-spin" /> Sending Request…
           </>
         ) : (
           <>
-            Request appointment <CalendarCheck />
+            {cta.requestAppointment} <CalendarCheck />
           </>
         )}
       </Button>
